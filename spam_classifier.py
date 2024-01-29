@@ -11,4 +11,4 @@
 # MultinomialNB scans patterns in our matrix and finds the row which is most approximate to our vector.
 # it returns the label from the labels list which matches the row in our matrix,
 # and that's how our data gets classified.
-# MultinomialNB can also give us it's  
+# MultinomialNB can also give us it's accuracy estimation.
