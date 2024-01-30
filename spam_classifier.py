@@ -14,11 +14,29 @@
 # MultinomialNB can also give us it's accuracy estimation.
 
 # convert the spam & ham file into a dictionary
-
 import csv
-with open("spam.csv", 'r', newline='') as file:
-    csv_reader = csv.reader(file)
-    for row in csv_reader:
-        print(row)
+from sklearn.feature_extraction.text import CountVectorizer
 
 
+def create_dictionary(filepath):
+    texts = list()
+    labels = list()
+    with open(filepath, 'r', encoding='latin1') as file:
+        csv_reader = csv.reader(file)
+        next(csv_reader)
+        for row in csv_reader:
+            labels.append(row[0].strip('"'))
+            texts.append(row[1].strip('"'))
+    vectorizer = CountVectorizer()
+    X_bow = vectorizer.fit_transform(texts)
+    print(X_bow.shape)
+
+create_dictionary('spam.csv')
+
+# TODO: write the vectirization function for the new input
+# add MultinomialNB and test a few inputs
+# learn how to add tests in python and write some tests
+
+# TODO: poish the work and finish the flow
+# connect frontend
+# go live
