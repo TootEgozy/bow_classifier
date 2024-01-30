@@ -12,3 +12,13 @@
 # it returns the label from the labels list which matches the row in our matrix,
 # and that's how our data gets classified.
 # MultinomialNB can also give us it's accuracy estimation.
+
+# convert the spam & ham file into a dictionary
+
+import csv
+with open("spam.csv", 'r', newline='') as file:
+    csv_reader = csv.reader(file)
+    for row in csv_reader:
+        print(row)
+
+
