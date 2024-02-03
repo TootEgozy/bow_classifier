@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from index import process_learning_data
+from index import process_learning_data, classify_input
 
 app = Flask(__name__)
 
@@ -17,11 +17,13 @@ def index():
     return render_template('index.html')
 
 @app.route('/classifier', methods=['POST'])
-def predict():
-    user_input = request.form.get('user_input')
-    prediction = f"Prediction for '{user_input}': Spam"
+def classifier():
+    input_text = request.form.get('input_text')
+    input_type = request.form.get('input_type')
+    cls_result = classify_input(input_text, learning_data[input_type])
+    classification = f"classification for '{input_text}': {cls_result[0]}, Accuracy: {cls_result[1]}"
 
-    return render_template('index.html', prediction=prediction)
+    return render_template('index.html', classification=classification)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
