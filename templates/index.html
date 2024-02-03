@@ -21,17 +21,21 @@
 </head>
 <body>
     <div class="container">
-         <h1>Spam Classifier</h1>
+         <h1>NLP Classifier</h1>
 
         <form action="/classifier" method="post">
-            <label for="user_input">Enter Text:</label>
-            <input type="text" id="user_input" name="user_input" required>
-            <button type="submit">Predict</button>
+            <label for="input_text">Enter Text:</label>
+            <input type="text" id="input_text" name="input_text" required>
+            <input type="radio" id="input_type_spam" name="input_type" value="spam" />
+            <label for="input_type_spam">detect spam</label>
+            <input type="radio" id="input_type_bias" name="input_type" value="bias"/>
+            <label for="input_type_bias">detect a bias</label>
+            <button type="submit">classify</button>
         </form>
 
-        {% if prediction %}
-            <h2>Prediction:</h2>
-            <p>{{ prediction }}</p>
+        {% if classification %}
+            <h2>classification:</h2>
+            <p>{{ classification }}</p>
         {% endif %}
     </div>
 </body>
