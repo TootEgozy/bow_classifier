@@ -1,51 +1,44 @@
-import nltk, re
-from nltk.corpus import wordnet
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
-from collections import Counter
+import csv
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
 
-normalizer = WordNetLemmatizer()
+def answer_templates(category):
+    if(category == 'spam'):
+        return {
+            "spam": "We are {}% certain that your input is spam"
+        }
 
-# get the most common pos for a word by counting it's occurrences in a dictionary
-def get_pos(word):
-    pos_counts = Counter({"n": 0, "v": 0, "a": 0, "r": 0})
-    pos_options = wordnet.synsets(word)
-    for item in pos_options:
-        pos_counts[item.pos()] += 1
-    return pos_counts.most_common(1)[0][0]
+def process_learning_file(filepath):
+    texts = list()
+    labels = list()
+    with open(filepath, 'r', encoding='latin1') as file:
+        csv_reader = csv.reader(file)
+        next(csv_reader)
+        for row in csv_reader:
+            labels.append(row[0].strip('"'))
+            texts.append(row[1].strip('"'))
+    vectorizer = CountVectorizer()
+    matrix = vectorizer.fit_transform(texts)
+    return {
+        "matrix": matrix,
+        "labels": labels,
+        "vectorizer": vectorizer
+    }
 
-# clean, tokenize and normalize text to get a list of single words, edited based on their part-of-speech
-def preprocess_text(text):
-    cleaned = re.sub(r'\W+', ' ', text).lower()
-    tokenized = word_tokenize(cleaned)
-    normalized = [normalizer.lemmatize(token, get_pos(token)) for token in tokenized]
-    return normalized
+def process_learning_data():
+    spam_data = process_learning_file('learning_data\\spam.csv')
+    return {
+        'spam': spam_data
+    }
 
-# convert a corpus into a bow object with words and their occurrences.
-def create_bow(text):
-    word_list = preprocess_text(text)
-    bow = Counter(word_list)
-    return bow
+def classify_input(input, cls_data):
+    input_vec = cls_data.vectorizer.transform([input])
+    X_train, X_test, y_train, y_test = train_test_split(cls_data.matrix, cls_data.labels, test_size=0.2, random_state=42)
+    classifier = MultinomialNB()
+    classifier.fit(X_train, y_train)
+    predictions_accuracy = classifier.score(X_test, y_test) * 100
+    predicted_label = classifier.predict(input_vec)[0]
+    return predicted_label, predictions_accuracy
 
-# create a dictionary from a bow
-def create_dictionary(bow):
-    dict = {}
-    for i, word in enumerate(bow):
-        dict[word] = i
-    return dict
 
-# create a bow from the new input, and a 0-full vector, then assign the word count to the vector.
-# ignore new words. return the vector
-def input_text_to_vector(input_text, dictionary):
-    input_bow = create_bow(input_text)
-    vector = [0] * len(dictionary)
-    for word in input_bow:
-        if word in dictionary:
-            index = dictionary[word]
-            vector[index] = input_bow[word]
-    return vector
-
-bow = create_bow('hello my name is island! I\'m happy to be using python and running my bow implementation')
-dict = create_dictionary(bow)
-input_text_to_vector('hello island!', dict)
