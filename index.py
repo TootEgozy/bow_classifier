@@ -27,7 +27,7 @@ def process_learning_file(filepath):
     }
 
 def process_learning_data():
-    spam_data = process_learning_file('learning_data\\spam.csv')
+    spam_data = process_learning_file('learning_data/spam.csv')
     return {
         'spam': spam_data
     }
