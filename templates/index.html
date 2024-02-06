@@ -26,9 +26,9 @@
         <form action="/classifier" method="post">
             <label for="input_text">Enter Text:</label>
             <input type="text" id="input_text" name="input_text" required>
-            <input type="radio" id="input_type_spam" name="input_type" value="spam" />
+            <input type="radio" id="input_type_spam" name="input_type" value="spam" required/>
             <label for="input_type_spam">detect spam</label>
-            <input type="radio" id="input_type_bias" name="input_type" value="bias"/>
+            <input type="radio" id="input_type_bias" name="input_type" value="bias" required/>
             <label for="input_type_bias">detect a bias</label>
             <button type="submit">classify</button>
         </form>
