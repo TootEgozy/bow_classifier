@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from index import process_learning_data, classify_input
+from waitress import serve
 
 app = Flask(__name__)
 
@@ -26,4 +27,7 @@ def classifier():
     return render_template('index.html', classification=classification)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    # dev server
+    # app.run(host='0.0.0.0')
+    # production server
+    serve(app, host='0.0.0.0', port=5000)
