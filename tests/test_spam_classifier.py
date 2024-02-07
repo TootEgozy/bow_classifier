@@ -1,4 +1,4 @@
-from spam_classifier import classify_input
+from index import classify_input
 
 # TODO: add a better testing flow
 # write a general function to sanitize data from files to provide the best learning data

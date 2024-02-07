@@ -28,8 +28,10 @@ def process_learning_file(filepath):
 
 def process_learning_data():
     spam_data = process_learning_file('learning_data/spam.csv')
+    sentiment_data = process_learning_file('learning_data/sentiment.csv')
     return {
-        'spam': spam_data
+        'spam': spam_data,
+        'sentiment': sentiment_data
     }
 
 def classify_input(input, cls_data):

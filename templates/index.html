@@ -28,14 +28,18 @@
             <input type="text" id="input_text" name="input_text" required>
             <input type="radio" id="input_type_spam" name="input_type" value="spam" required/>
             <label for="input_type_spam">detect spam</label>
-            <input type="radio" id="input_type_bias" name="input_type" value="bias" required/>
-            <label for="input_type_bias">detect a bias</label>
+            <input type="radio" id="input_type_sentiment" name="input_type" value="sentiment" required/>
+            <label for="input_type_sentiment">detect a bias</label>
+            <br>
             <button type="submit">classify</button>
+            <br>
         </form>
 
-        {% if classification %}
+        {% if classification and accuracy %}
             <h2>classification:</h2>
             <p>{{ classification }}</p>
+            <h2>accuracy:</h2>
+            <p>{{ accuracy }}</p>
         {% endif %}
     </div>
 </body>
