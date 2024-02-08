@@ -24,7 +24,7 @@ def classifier():
     cls_result = classify_input(input_text, learning_data[input_type])
     classification = f"classification for '{input_text}': {cls_result[0]}, Accuracy: {cls_result[1]}"
 
-    return render_template('index.html', classification=classification)
+    return render_template('index.html', classification=cls_result[0], accuracy=cls_result[1])
 
 if __name__ == '__main__':
     # dev server
