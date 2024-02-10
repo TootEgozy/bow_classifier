@@ -9,15 +9,15 @@ def answer_templates(category):
             "spam": "We are {}% certain that your input is spam"
         }
 
-def process_learning_file(filepath):
+def process_learning_file(filepath, label_index, text_index):
     texts = list()
     labels = list()
     with open(filepath, 'r', encoding='latin1') as file:
         csv_reader = csv.reader(file)
         next(csv_reader)
         for row in csv_reader:
-            labels.append(row[0].strip('"'))
-            texts.append(row[1].strip('"'))
+            labels.append(row[label_index].strip('"'))
+            texts.append(row[text_index].strip('"'))
     vectorizer = CountVectorizer()
     matrix = vectorizer.fit_transform(texts)
     return {
@@ -27,9 +27,11 @@ def process_learning_file(filepath):
     }
 
 def process_learning_data():
-    spam_data = process_learning_file('learning_data/spam.csv')
+    spam_data = process_learning_file('learning_data/spam.csv', 0, 1)
+    sentiment_data = process_learning_file('learning_data/sentiment.csv', 1, 0)
     return {
-        'spam': spam_data
+        'spam': spam_data,
+        'sentiment': sentiment_data
     }
 
 def classify_input(input, cls_data):
