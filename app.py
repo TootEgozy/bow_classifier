@@ -22,7 +22,10 @@ def classifier():
     input_text = request.form.get('input_text')
     input_type = request.form.get('input_type')
     cls_result = classify_input(input_text, learning_data[input_type])
+<<<<<<< HEAD
     print(cls_result)
+=======
+>>>>>>> temp
     classification = f"classification for '{input_text}': {cls_result[0]}, Accuracy: {cls_result[1]}"
 
     return render_template('index.html', classification=cls_result[0], accuracy=cls_result[1])
