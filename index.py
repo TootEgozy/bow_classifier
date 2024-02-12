@@ -28,7 +28,7 @@ def process_learning_file(filepath, label_index, text_index):
 
 def process_learning_data():
     spam_data = process_learning_file('learning_data/spam.csv', 0, 1)
-    sentiment_data = process_learning_file('learning_data/sentiment.csv', 1, 0)
+    sentiment_data = process_learning_file('learning_data/sentiment.csv', 0, 5)
     return {
         'spam': spam_data,
         'sentiment': sentiment_data
@@ -37,7 +37,7 @@ def process_learning_data():
 def classify_input(input, cls_data):
     input_vec = cls_data['vectorizer'].transform([input])
     X_train, X_test, y_train, y_test = train_test_split(cls_data['matrix'], cls_data['labels'], test_size=0.2, random_state=42)
-    classifier = MultinomialNB()
+    classifier = MultinomialNB(alpha=1.0)
     classifier.fit(X_train, y_train)
     predictions_accuracy = classifier.score(X_test, y_test) * 100
     predicted_label = classifier.predict(input_vec)[0]
