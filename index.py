@@ -3,12 +3,15 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 
+# TODO: split the huge twitter sentiment dataset and add to the data
 def answer_templates(category):
     if(category == 'spam'):
         return {
             "spam": "We are {}% certain that your input is spam"
         }
 
+# TODO: take out the reading files into text / labels logic into a separate function so that files
+#  of the same type can be accumulated.
 def process_learning_file(filepath, label_index, text_index):
     texts = list()
     labels = list()
@@ -28,10 +31,10 @@ def process_learning_file(filepath, label_index, text_index):
 
 def process_learning_data():
     spam_data = process_learning_file('learning_data/spam.csv', 0, 1)
-    sentiment_data = process_learning_file('learning_data/sentiment.csv', 0, 5)
+    # sentiment_data = process_learning_file('learning_data/sentiment.csv', 0, 1)
     return {
         'spam': spam_data,
-        'sentiment': sentiment_data
+        # 'sentiment': sentiment_data
     }
 
 def classify_input(input, cls_data):
