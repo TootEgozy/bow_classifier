@@ -1,4 +1,6 @@
 import csv
+
+import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
@@ -46,8 +48,9 @@ def classify_input(input, cls_data):
     X_train, X_test, y_train, y_test = train_test_split(cls_data['matrix'], cls_data['labels'], test_size=0.2, random_state=42)
     classifier = MultinomialNB(alpha=1.0)
     classifier.fit(X_train, y_train)
-    predictions_accuracy = classifier.score(X_test, y_test) * 100
-    predicted_label = classifier.predict(input_vec)[0]
-    return predicted_label, predictions_accuracy
+    input_as_matrix = np.array(input_vec)  # Convert sparse matrix to array
+    probabilities = classifier.predict_proba(input_as_matrix.reshape(1, -1))
+    predicted_label = classifier.predict([input_vec])[0]
+    return predicted_label, probabilities
 
 
