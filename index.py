@@ -6,7 +6,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 
 
-# TODO: split the huge twitter sentiment dataset and add to the data
 def answer_templates(category):
     if (category == 'spam'):
         return {
@@ -51,6 +50,8 @@ def label_to_text(cls_type, predicted_label):
                 return 'neutral'
             case '4':
                 return 'positive'
+    else:
+        return predicted_label
 
 def classify_input(input, cls_type, cls_data):
     input_vec = cls_data['vectorizer'].transform([input])
