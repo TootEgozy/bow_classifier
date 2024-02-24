@@ -5,6 +5,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 
+from utils.get_data_path import get_data_path
+
 
 def answer_templates(category):
     if (category == 'spam'):
@@ -12,13 +14,13 @@ def answer_templates(category):
             "spam": "We are {}% certain that your input is spam"
         }
 
-
-def process_learning_files(class_type, label_index, text_index):
-    filenames = os.listdir(f'learning_data/{class_type}')
+def process_learning_files(cls_type, label_index, text_index):
+    learning_data_path = get_data_path(cls_type)
+    filenames = os.listdir(learning_data_path)
     texts = list()
     labels = list()
     for filename in filenames:
-        with open(f'learning_data/{class_type}/{filename}', 'r', encoding='latin1') as file:
+        with open(f'{learning_data_path}/{filename}', 'r', encoding='latin1') as file:
             csv_reader = csv.reader(file)
             next(csv_reader)
             for row in csv_reader:
