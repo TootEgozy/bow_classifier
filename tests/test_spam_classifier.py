@@ -10,16 +10,16 @@ def learning_data():
     return process_learning_data()
 
 
-class TestClassifier:
+class TestSpamClassifier:
 
     def test_classify_spam(self, learning_data):
-        spam_inputs = get_texts_by_label('spam', 'spam', 10)
+        spam_inputs = get_texts_by_label('spam', 'spam', 10, 1)
         for input in spam_inputs:
             predicted_label = classify_input(input, 'spam', learning_data['spam'])
             assert predicted_label == 'spam'
 
     def test_classify_ham(self, learning_data):
-        ham_inputs = get_texts_by_label('spam','ham', 10)
+        ham_inputs = get_texts_by_label('spam','ham', 10, 1)
         for input in ham_inputs:
             predicted_label = classify_input(input, 'ham', learning_data['spam'])
             assert predicted_label == 'ham'
