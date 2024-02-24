@@ -17,7 +17,7 @@ class TestSentimentClassifier:
         print(negative_inputs)
         for input in negative_inputs:
             predicted_label = classify_input(input, 'sentiment', learning_data['sentiment'])
-            assert predicted_label == '0'
+            assert predicted_label == 'negative'
 
     def test_classify_ham(self, learning_data):
         ham_inputs = get_texts_by_label('spam','ham', 10)
