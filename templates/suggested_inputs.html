@@ -1,0 +1,28 @@
+<div id="suggestedInputs" style="display: none;">
+  <button onclick="generateInputs('spam', 4)">Generate</button>
+</div>
+
+<script>
+    generateInputs = (clsType, count) => {
+        fetch('/generate-inputs', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ cls_type: clsType, count: count})
+        })
+        .then(response => response.json())
+        .then(data => renderInputs(data.inputs))
+        .catch(error => console.log('Error:', error));
+    }
+
+    renderInputs = (textInputs) => {
+        const suggestedInputsDiv = document.getElementById('suggestedInputs');
+        suggestedInputsDiv.innerHTML = '';
+
+        textInputs.forEach(textInput => {
+            const span = document.createElement('span');
+            span.textContent = textInput;
+            span.onclick = () => selectInput(textInput)
+            suggestedInputsDiv.appendChild(span);
+        });
+    }
+</script>

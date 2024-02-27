@@ -14,13 +14,15 @@ def learning_data():
 class TestSentimentClassifier:
 
     def test_classify_negative(self, learning_data):
-        negative_inputs = get_texts_by_label('sentiment', '0', 5, 5,'sentiment_1.csv') + get_texts_by_label('sentiment', '0', 5, 5,'sentiment_2.csv')
+        negative_inputs = get_texts_by_label('sentiment', '0', 5, 5,'sentiment_1.csv') + \
+                          get_texts_by_label('sentiment', '0', 5, 5,'sentiment_2.csv')
         for input in negative_inputs:
             predicted_label = classify_input(input, 'sentiment', learning_data['sentiment'])
             assert predicted_label == 'negative', f"Assertion failed for input = {input}"
 
     def test_classify_positive(self, learning_data):
-        positive_inputs = get_texts_by_label('sentiment', '4', 5, 5,'sentiment_4.csv') + get_texts_by_label('sentiment', '4', 5, 5,'sentiment_5.csv')
+        positive_inputs = get_texts_by_label('sentiment', '4', 5, 5,'sentiment_4.csv') + \
+                          get_texts_by_label('sentiment', '4', 5, 5,'sentiment_5.csv')
         for input in positive_inputs:
             predicted_label = classify_input(input, 'sentiment', learning_data['sentiment'])
             assert predicted_label == 'positive', f"Assertion failed for input = {input}"

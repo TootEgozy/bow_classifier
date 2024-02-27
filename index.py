@@ -5,6 +5,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB
 
+from utils.get_text_by_label import get_texts_by_label
 from utils.get_data_path import get_data_path
 
 
@@ -62,3 +63,15 @@ def classify_input(input, cls_type, cls_data):
     classifier.fit(X_train, y_train)
     predicted_label = classifier.predict(input_vec)[0]
     return label_to_text(cls_type, predicted_label)
+
+
+def get_inputs_for_user(cls_type, count):
+    match cls_type:
+        case 'spam':
+            inputs = get_texts_by_label(cls_type, 'spam', count / 2, 1) + \
+                get_texts_by_label(cls_type, 'ham', count / 2, 1)
+            return inputs
+        case 'sentiment':
+            inputs = get_texts_by_label(cls_type, '0', count / 2, 5, 'sentiment_1.csv') + \
+                     get_texts_by_label(cls_type, '4', count / 2, 5, 'sentiment_4.csv')
+            return inputs

@@ -17,6 +17,14 @@ def initialize():
 def index():
     return render_template('index.html')
 
+@app.route('/generate-inputs', methods=['POST'])
+def generate_inputs():
+    data = request.get_json()
+    cls_type = data.get('cls_type')
+    count = data.get('count')
+    inputs = get_inputs_for_user(cls_type, count)
+    return jsonify({'inputs': inputs})
+
 @app.route('/classifier', methods=['POST'])
 def classifier():
     input_text = request.form.get('input_text')
