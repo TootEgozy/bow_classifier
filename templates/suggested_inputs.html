@@ -7,11 +7,19 @@
         fetch('/generate-inputs', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ cls_type: clsType, count: count})
+            body: {}
+            // body: { cls_type: clsType, count: count}
         })
-        .then(response => response.json())
+        .then(response => {
+          console.log('got this response from the server:')
+          console.log(response)
+          return response.json()
+        })
         .then(data => renderInputs(data.inputs))
-        .catch(error => console.log('Error:', error));
+        .catch(error => {
+          console.log('got an error response back from the server:')
+          console.log('Error:', error)
+        });
     }
 
     renderInputs = (textInputs) => {

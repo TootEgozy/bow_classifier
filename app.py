@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request
-from index import process_learning_data, classify_input
+from flask import Flask, render_template, request, jsonify
+from index import process_learning_data, classify_input, get_inputs_for_user
 from waitress import serve
 
 app = Flask(__name__)
@@ -19,11 +19,15 @@ def index():
 
 @app.route('/generate-inputs', methods=['POST'])
 def generate_inputs():
-    data = request.get_json()
-    cls_type = data.get('cls_type')
-    count = data.get('count')
-    inputs = get_inputs_for_user(cls_type, count)
-    return jsonify({'inputs': inputs})
+    # data = request.get_json()
+    # print('got a request from client')
+    # print(data)
+    # cls_type = data.get('cls_type')
+    # count = data.get('count')
+    # inputs = get_inputs_for_user(cls_type, count)
+    # return jsonify({'inputs': inputs})
+    return render_template('suggested_inputs.html', inputs=['hi', 'hello', 'hey'])
+
 
 @app.route('/classifier', methods=['POST'])
 def classifier():
