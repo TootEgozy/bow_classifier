@@ -26,7 +26,8 @@ def generate_inputs():
     # count = data.get('count')
     # inputs = get_inputs_for_user(cls_type, count)
     # return jsonify({'inputs': inputs})
-    return render_template('suggested_inputs.html', inputs=['hi', 'hello', 'hey'])
+    new_inputs = ['Input 1', 'Input 2', 'Input 3']
+    return jsonify(inputs=new_inputs)
 
 
 @app.route('/classifier', methods=['POST'])
