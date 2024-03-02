@@ -24,10 +24,10 @@ def generate_inputs():
     # print(data)
     # cls_type = data.get('cls_type')
     # count = data.get('count')
-    # inputs = get_inputs_for_user(cls_type, count)
+    inputs = get_inputs_for_user('spam', 5)
     # return jsonify({'inputs': inputs})
-    new_inputs = ['Input 1', 'Input 2', 'Input 3']
-    return jsonify(inputs=new_inputs)
+    # new_inputs = ['Input 1', 'Input 2', 'Input 3']
+    return jsonify(inputs=inputs)
 
 
 @app.route('/classifier', methods=['POST'])

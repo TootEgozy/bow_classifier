@@ -66,12 +66,13 @@ def classify_input(input, cls_type, cls_data):
 
 
 def get_inputs_for_user(cls_type, count):
+    half_count = int(count / 2)
     match cls_type:
         case 'spam':
-            inputs = get_texts_by_label(cls_type, 'spam', count / 2, 1) + \
-                get_texts_by_label(cls_type, 'ham', count / 2, 1)
+            inputs = get_texts_by_label(cls_type, 'spam', half_count, 1) + \
+                get_texts_by_label(cls_type, 'ham', half_count, 1)
             return inputs
         case 'sentiment':
-            inputs = get_texts_by_label(cls_type, '0', count / 2, 5, 'sentiment_1.csv') + \
-                     get_texts_by_label(cls_type, '4', count / 2, 5, 'sentiment_4.csv')
+            inputs = get_texts_by_label(cls_type, '0', half_count, 5, 'sentiment_1.csv') + \
+                     get_texts_by_label(cls_type, '4', half_count, 5, 'sentiment_4.csv')
             return inputs
