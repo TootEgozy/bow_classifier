@@ -41,12 +41,14 @@
         {% endif %}
 
         {% include 'suggested_inputs.html' %}
-        <button onclick="RegenerateInputs()">Generate inputs</button>
+        <button onclick="RegenerateInputs()">regenerate inputs</button>
 
         <script>
             function RegenerateInputs() {
-                var suggestedInputs = document.getElementById('suggestedInputs');
-                suggestedInputs.style.display = (suggestedInputs.style.display === 'none') ? 'block' : 'none';
+                generate_inputs_btn = document.getElementById('generateInputsBtn');
+                generate_inputs_btn.click()
+                // var suggestedInputs = document.getElementById('suggestedInputs');
+                // suggestedInputs.style.display = (suggestedInputs.style.display === 'none') ? 'block' : 'none';
             }
 
             function selectInput(input) {
