@@ -7,8 +7,7 @@
         fetch('/generate-inputs', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: {}
-            // body: { cls_type: clsType, count: count}
+            body: { cls_type: clsType, count: count}
         })
         .then(response => {
           console.log('got this response from the server:')
