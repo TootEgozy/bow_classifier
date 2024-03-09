@@ -20,20 +20,14 @@ def index():
 
 @app.route('/generate-inputs', methods=['POST'])
 def generate_inputs():
-    # body = request.data.decode('utf-8')
-    # body_dict = json.loads(body)
-    # print('got a request from client')
-    # print(body)
-    # cls_type = body.get('cls_type')
-    # count = body.get('count')
-    # inputs = get_inputs_for_user('spam', 5)
-    # return jsonify({'inputs': inputs})
-    # new_inputs = ['Input 1', 'Input 2', 'Input 3']
-    data = request.get_json()
-    cls_type = data.get('cls_type')
-    count = data.get('count')
-    inputs = get_inputs_for_user(cls_type, count)
-    return jsonify(inputs=inputs)
+    try:
+        data = request.get_json()
+        cls_type = data.get('cls_type')
+        count = data.get('count')
+        inputs = get_inputs_for_user(cls_type, count)
+        return jsonify(inputs=inputs)
+    except Exception as e:
+        return jsonify(error=str(e)), 400
 
 
 @app.route('/classifier', methods=['POST'])
@@ -46,6 +40,6 @@ def classifier():
 
 if __name__ == '__main__':
     # dev server
-    app.run(host='0.0.0.0')
+    # app.run(host='0.0.0.0')
     # production server
-    # serve(app, host='0.0.0.0', port=5000)
+    serve(app, host='0.0.0.0', port=5000)

@@ -1,4 +1,4 @@
-<div id="suggestedInputs" style="display: none;">
+<div id="suggestedInputs">
   <button id="generateInputsBtn" onclick="generateInputs('spam', 4)">Generate</button>
 </div>
 
@@ -7,14 +7,19 @@
         fetch('/generate-inputs', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: { cls_type: clsType, count: count}
+            // body: { cls_type: clsType, count: count}
+              body: JSON.stringify({ cls_type: clsType, count: count})
         })
         .then(response => {
           console.log('got this response from the server:')
           console.log(response)
           return response.json()
         })
-        .then(data => renderInputs(data.inputs))
+        .then(data => {
+          console.log('gor data as JSON')
+          console.log(data)
+          return renderInputs(data.inputs)
+        })
         .catch(error => {
           console.log('got an error response back from the server:')
           console.log('Error:', error)
@@ -22,10 +27,12 @@
     }
 
     renderInputs = (textInputs) => {
+      console.log('rendering inputs...')
         const suggestedInputsDiv = document.getElementById('suggestedInputs');
         suggestedInputsDiv.innerHTML = '';
 
         textInputs.forEach(textInput => {
+          console.log(textInput)
             const span = document.createElement('span');
             span.textContent = textInput;
             span.onclick = () => selectInput(textInput)
