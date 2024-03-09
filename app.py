@@ -29,10 +29,10 @@ def generate_inputs():
     # inputs = get_inputs_for_user('spam', 5)
     # return jsonify({'inputs': inputs})
     # new_inputs = ['Input 1', 'Input 2', 'Input 3']
-    data = request.get_json()  # Get JSON data from the request
+    data = request.get_json()
     cls_type = data.get('cls_type')
     count = data.get('count')
-    inputs = get_inputs_for_user(cls_type, count)  # Use cls_type and count from the request
+    inputs = get_inputs_for_user(cls_type, count)
     return jsonify(inputs=inputs)
 
 
