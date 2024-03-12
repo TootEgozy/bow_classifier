@@ -6,7 +6,6 @@
   }
   .suggested_input_span {
     display: inline-block;
-    margin: 10px;
     padding: 5px;
     border: 1px lightblue;
   }
@@ -14,10 +13,17 @@
 
 
 <div id="suggestedInputs">
-  <button id="generateInputsBtn" onclick="generateInputs('spam', 4)">Generate</button>
+  <button id="generateInputsBtn" onclick="collectDataAndGenerateInputs()">Generate</button>
 </div>
 
 <script>
+    collectDataAndGenerateInputs = () => {
+        const inputType = document.querySelector('input[name="input_type"]:checked').value;
+        if(!inputType) alert('Please select a classification type to get sample inputs')
+        else generateInputs(inputType, 4)
+
+    }
+
     generateInputs = (clsType, count) => {
         fetch('/generate-inputs', {
             method: 'POST',
