@@ -29,7 +29,6 @@ def generate_inputs():
     except Exception as e:
         return jsonify(error=str(e)), 400
 
-
 @app.route('/classifier', methods=['POST'])
 def classifier():
     input_text = request.form.get('input_text')
@@ -37,6 +36,7 @@ def classifier():
     cls_result = classify_input(input_text, input_type, learning_data[input_type])
 
     return render_template('index.html', classification=cls_result)
+
 
 if __name__ == '__main__':
     # dev server

@@ -1,3 +1,18 @@
+<style>
+  #suggestedInputs {
+    height: 20%;
+    width: 30%;
+
+  }
+  .suggested_input_span {
+    display: inline-block;
+    margin: 10px;
+    padding: 5px;
+    border: 1px lightblue;
+  }
+</style>
+
+
 <div id="suggestedInputs">
   <button id="generateInputsBtn" onclick="generateInputs('spam', 4)">Generate</button>
 </div>
@@ -7,23 +22,11 @@
         fetch('/generate-inputs', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            // body: { cls_type: clsType, count: count}
               body: JSON.stringify({ cls_type: clsType, count: count})
         })
-        .then(response => {
-          console.log('got this response from the server:')
-          console.log(response)
-          return response.json()
-        })
-        .then(data => {
-          console.log('gor data as JSON')
-          console.log(data)
-          return renderInputs(data.inputs)
-        })
-        .catch(error => {
-          console.log('got an error response back from the server:')
-          console.log('Error:', error)
-        });
+        .then(response => response.json())
+        .then(data => renderInputs(data.inputs))
+        .catch(error => console.error('Error', error));
     }
 
     renderInputs = (textInputs) => {
@@ -33,10 +36,11 @@
 
         textInputs.forEach(textInput => {
           console.log(textInput)
-            const span = document.createElement('span');
-            span.textContent = textInput;
-            span.onclick = () => selectInput(textInput)
-            suggestedInputsDiv.appendChild(span);
+            const input_span = document.createElement('span');
+            input_span.textContent = textInput;
+            input_span.onclick = () => selectInput(textInput)
+            input_span.classList.add('suggested_input_span')
+            suggestedInputsDiv.appendChild(input_span);
         });
     }
 </script>
