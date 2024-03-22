@@ -16,6 +16,8 @@
 
         .container {
             font-family: 'Segoe UI', 'Tahoma', 'Geneva', sans-serif;
+            position: relative;
+            text-align: center;
         }
     </style>
 </head>
@@ -42,6 +44,7 @@
 
         {% include 'suggested_inputs.html' %}
         <button onclick="RegenerateInputs()">regenerate inputs</button>
+        <div id="suggestedInputs"></div>
 
         <script>
             function RegenerateInputs() {
