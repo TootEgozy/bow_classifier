@@ -11,14 +11,30 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             min-height: 100vh;
         }
 
         .container {
+            width: inherit;
+            height: inherit;
             font-family: 'Segoe UI', 'Tahoma', 'Geneva', sans-serif;
-            position: relative;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
         }
+
+        form {
+            width: inherit;
+            height: inherit;
+        }
+
+        #input_text {
+            width: 60%;
+            height: 10%;
+            box-sizing: border-box;
+        }
+
     </style>
 </head>
 <body>
@@ -28,13 +44,12 @@
         <form action="/classifier" method="post">
             <label for="input_text">Enter Text:</label>
             <input type="text" id="input_text" name="input_text" required>
+            <br>
             <input type="radio" id="input_type_spam" name="input_type" value="spam" required/>
             <label for="input_type_spam">detect spam</label>
             <input type="radio" id="input_type_sentiment" name="input_type" value="sentiment" required/>
             <label for="input_type_sentiment">detect a sentiment</label>
-            <br>
             <button type="submit">classify</button>
-            <br>
         </form>
 
         {% if classification %}
