@@ -22,16 +22,28 @@
             display: flex;
             align-items: center;
             flex-direction: column;
+            justify-content: center;
         }
 
         form {
-            width: inherit;
-            height: inherit;
+            width: 80vw;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .radio-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: row;
         }
 
         #input_text {
-            width: 60%;
-            height: 10%;
+            width: 50%;
+            height: 20%;
             box-sizing: border-box;
         }
 
@@ -44,12 +56,13 @@
         <form action="/classifier" method="post">
             <label for="input_text">Enter Text:</label>
             <input type="text" id="input_text" name="input_text" required>
-            <br>
-            <input type="radio" id="input_type_spam" name="input_type" value="spam" required/>
-            <label for="input_type_spam">detect spam</label>
-            <input type="radio" id="input_type_sentiment" name="input_type" value="sentiment" required/>
-            <label for="input_type_sentiment">detect a sentiment</label>
-            <button type="submit">classify</button>
+            <div class="radio-container">
+                <input type="radio" id="input_type_spam" name="input_type" value="spam" required/>
+                <label for="input_type_spam">detect spam</label>
+                <input type="radio" id="input_type_sentiment" name="input_type" value="sentiment" required/>
+                <label for="input_type_sentiment">detect a sentiment</label>
+                <button type="submit">classify</button>
+            </div>
         </form>
 
         {% if classification %}
