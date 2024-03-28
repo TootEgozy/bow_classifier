@@ -15,6 +15,10 @@
             min-height: 100vh;
         }
 
+        *{
+            padding: 0.3vw;
+        }
+
         .container {
             width: inherit;
             height: inherit;
@@ -39,21 +43,37 @@
             flex-direction: row;
         }
 
+        .text-input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            background-color: lightblue;
+        }
+
         #input_text {
             width: 50vw;
             height: 20vh;
             box-sizing: border-box;
         }
 
+        button {
+            padding: 2px;
+        }
+
     </style>
 </head>
 <body>
     <div class="container">
-         <h1>NLP Classifier</h1>
+        <h1>NLP Classifier</h1>
+        <h3>An NLP model trained to classify text. You can use it to filter spam, or detect a sentiment.</h3>
 
         <form action="/classifier" method="post">
-            <label for="input_text">Enter Text:</label>
-            <input type="text" id="input_text" name="input_text" required>
+            <div class="text-input-container">
+                <label for="input_text">Enter Text to classify, or try an input from the list below</label>
+                <input type="text" id="input_text" name="input_text" required>
+            </div>
             <div class="radio-container">
                 <input type="radio" id="input_type_spam" name="input_type" value="spam" required/>
                 <label for="input_type_spam">detect spam</label>
@@ -64,8 +84,7 @@
         </form>
 
         {% if classification %}
-            <h2>classification:</h2>
-            <p>{{ classification }}</p>
+            <h2>classification: {{ classification }}</h2>
         {% endif %}
 
         {% include 'suggested_inputs.html' %}
@@ -75,14 +94,10 @@
             function RegenerateInputs() {
                 generate_inputs_btn = document.getElementById('generateInputsBtn');
                 generate_inputs_btn.click()
-                // var suggestedInputs = document.getElementById('suggestedInputs');
-                // suggestedInputs.style.display = (suggestedInputs.style.display === 'none') ? 'block' : 'none';
             }
 
             function selectInput(input) {
-                alert('input selected'+input)
                 document.getElementById('input_text').value = input;
-                // document.getElementById('suggestedInputs').style.display = 'none';
             }
         </script>
 
