@@ -42,12 +42,9 @@
     }
 
     renderInputs = (textInputs) => {
-      console.log('rendering inputs...')
         const suggestedInputsDiv = document.getElementById('suggestedInputs');
         suggestedInputsDiv.innerHTML = '';
-
         textInputs.forEach(textInput => {
-          console.log(textInput)
             const input_span = document.createElement('span');
             input_span.textContent = textInput;
             input_span.onclick = () => selectInput(textInput)
