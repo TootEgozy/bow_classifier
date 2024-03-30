@@ -2,12 +2,16 @@
   #suggestedInputs {
     height: 20%;
     width: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
 
   }
   .suggested_input_span {
-    display: inline-block;
-    padding: 5px;
-    border: 1px solid blue;
+    flex: 1 1 200px;
+    margin: 10px;
+    text-align: center;
   }
   .suggestedInputsContainer {
     display: flex;
@@ -17,7 +21,7 @@
 </style>
 
 <div class="suggestedInputsContainer">
-  <button id="generateInputsBtn" onclick="collectDataAndGenerateInputs()">Generate</button>
+  <button id="generateInputsBtn" onclick="collectDataAndGenerateInputs()">Generate new inputs</button>
   <div id="suggestedInputs"></div>
 </div>
 

@@ -14,9 +14,15 @@ def initialize():
         learning_data = process_learning_data()
         print('added learning data')
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    if request.method == 'POST':
+        input_text = request.form.get('input_text')
+        input_type = request.form.get('input_type')
+        cls_result = classify_input(input_text, input_type, learning_data[input_type])
+        return render_template('index.html', classification=cls_result)
+    else:
+        return render_template('index.html', classification=None)
 
 @app.route('/generate-inputs', methods=['POST'])
 def generate_inputs():
@@ -28,15 +34,6 @@ def generate_inputs():
         return jsonify(inputs=inputs)
     except Exception as e:
         return jsonify(error=str(e)), 400
-
-@app.route('/classifier', methods=['POST'])
-def classifier():
-    input_text = request.form.get('input_text')
-    input_type = request.form.get('input_type')
-    cls_result = classify_input(input_text, input_type, learning_data[input_type])
-
-    return render_template('index.html', classification=cls_result)
-
 
 if __name__ == '__main__':
     # dev server
