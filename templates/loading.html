@@ -4,13 +4,51 @@
     <meta charset="UTF-8">
     <style>
         .loading_msg {
-            font-size: 40px;
+            margin: 1vh;
+            font-size: 15px;
             align-self: center;
+            font-family: 'Segoe UI', 'Tahoma', 'Geneva', sans-serif;
+        }
+
+        .loading_container {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .loader {
+          width: 50px;
+          aspect-ratio: 1;
+          color: #000;
+          border: 2px solid;
+          box-sizing: border-box;
+          background:
+            repeating-conic-gradient(#0000 0 90deg, currentColor 0 180deg),
+            repeating-conic-gradient(currentColor 0 90deg, #0000 0 180deg);
+          background-size: 16px 16px;
+          background-position: 0 0;
+          animation: l7 2s infinite;
+        }
+        @keyframes l7{
+          100% {background-position: 0px 32px,16px 0px}
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
-    <h1 class="loading_msg">Loading...</h1>
+    <div class="loading_container">
+        <span class="loading_msg">Training model</span>
+        <div class="loader"></div>
+        <span class="loading_msg">This process takes up to one minute to complete</span>
+    </div>
 
     <script>
         navigate = () => window.location.href = '/'
