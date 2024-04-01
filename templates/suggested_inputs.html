@@ -27,11 +27,14 @@
 
 
 <script>
+
+    selectInput = (input) => {
+      document.getElementById('input_text').value = input;
+    }
     collectDataAndGenerateInputs = () => {
         const inputType = document.querySelector('input[name="input_type"]:checked').value;
         if(!inputType) alert('Please select a classification type to get sample inputs')
         else generateInputs(inputType, 4)
-
     }
 
     generateInputs = (clsType, count) => {

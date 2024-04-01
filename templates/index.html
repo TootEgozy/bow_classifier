@@ -90,14 +90,28 @@
         <div id="suggestedInputs"></div>
 
         <script>
-            function RegenerateInputs() {
+
+            window.addEventListener('load', (event) => {
                 generate_inputs_btn = document.getElementById('generateInputsBtn');
                 generate_inputs_btn.click()
+            })
+
+            handleSubmit = (event) => {
+                event.preventDefault()
+                const formData = new FormData(document.getElementById("cls_form"));
+                const xhr = new XMLHttpRequest();
+                xhr.onload = () => {
+                    if (xhr.status >= 200 && xhr.status < 400) console.log(xhr.responseText);
+                    else console.error('Error: ' + xhr.status);
+                };
+                xhr.open('POST', '/', true);
+                xhr.onerror = () => console.error('error sending form');
+                xhr.send(formData);
             }
 
-            function selectInput(input) {
-                document.getElementById('input_text').value = input;
-            }
+            form = document.getElementById('cls_form');
+            form.addEventListener('submit', handleSubmit)
+
         </script>
 
     </div>
