@@ -90,20 +90,23 @@
         <div id="suggestedInputs"></div>
 
         <script>
-
             window.addEventListener('load', (event) => {
                 generate_inputs_btn = document.getElementById('generateInputsBtn');
                 generate_inputs_btn.click()
             })
 
             handleSubmit = (event) => {
-                event.preventDefault()
-                const formData = new FormData(document.getElementById("cls_form"));
+                // event.preventDefault();
+                const textInput = document.getElementById("input_text");
+                const radioSelection = document.getSelection()
+                const form = document.getElementById("cls_form")
+                const formData = new FormData();
+                console.log(form);
                 const xhr = new XMLHttpRequest();
-                xhr.onload = () => {
-                    if (xhr.status >= 200 && xhr.status < 400) console.log(xhr.responseText);
-                    else console.error('Error: ' + xhr.status);
-                };
+                // xhr.onload = () => {
+                //     if (xhr.status >= 200 && xhr.status < 400) console.log(xhr.responseText);
+                //     else console.error('Error: ' + xhr.status);
+                // };
                 xhr.open('POST', '/', true);
                 xhr.onerror = () => console.error('error sending form');
                 xhr.send(formData);
