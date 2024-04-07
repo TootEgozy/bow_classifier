@@ -97,16 +97,14 @@
 
             handleSubmit = (event) => {
                 // event.preventDefault();
-                const textInput = document.getElementById("input_text");
-                const radioSelection = document.getSelection()
-                const form = document.getElementById("cls_form")
-                const formData = new FormData();
-                console.log(form);
+                const textInput = document.getElementById("input_text").value;
+                const [radioSpam, radioSentiment] = ['input_type_spam', 'input_type_sentiment']
+                    .map((id) => document.getElementById(id))
+                const suggestedInputs = Array.from(document.getElementsByClassName(suggested_input_span)).map((sp) => sp.value); // Error
+                console.log(suggestedInputs);
+                const radioSelection = radioSpam.checked ? radioSpam : radioSentiment;
+                const formData = new FormData(document.getElementById("cls_form"));
                 const xhr = new XMLHttpRequest();
-                // xhr.onload = () => {
-                //     if (xhr.status >= 200 && xhr.status < 400) console.log(xhr.responseText);
-                //     else console.error('Error: ' + xhr.status);
-                // };
                 xhr.open('POST', '/', true);
                 xhr.onerror = () => console.error('error sending form');
                 xhr.send(formData);
