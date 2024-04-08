@@ -96,13 +96,13 @@
             })
 
             handleSubmit = (event) => {
-                // event.preventDefault();
-                const textInput = document.getElementById("input_text").value;
+                const formDataToSave = {}
+                formDataToSave.textInput = document.getElementById("input_text").value;
                 const [radioSpam, radioSentiment] = ['input_type_spam', 'input_type_sentiment']
                     .map((id) => document.getElementById(id))
-                const suggestedInputs = Array.from(document.getElementsByClassName(suggested_input_span)).map((sp) => sp.value); // Error
-                console.log(suggestedInputs);
-                const radioSelection = radioSpam.checked ? radioSpam : radioSentiment;
+                formDataToSave.radioSelection = radioSpam.checked ? radioSpam : radioSentiment;
+                formDataToSave.suggestedInputs = Object.values(document.getElementsByClassName('suggested_input_span')).map((s) => s.innerHTML);
+                console.log(formDataToSave)
                 const formData = new FormData(document.getElementById("cls_form"));
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', '/', true);
