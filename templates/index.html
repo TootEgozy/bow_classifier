@@ -90,10 +90,15 @@
         <div id="suggestedInputs"></div>
 
         <script>
+            // add a logic to determine if there's text inside the textarea, and if so, get the elements from the
+            // form and attach to the document
             window.addEventListener('load', (event) => {
                 generate_inputs_btn = document.getElementById('generateInputsBtn');
                 generate_inputs_btn.click()
             })
+
+            window.addEventListener('load', () => console.log('loaded'))
+
 
             handleSubmit = (event) => {
                 const formDataToSave = {}
@@ -102,7 +107,6 @@
                     .map((id) => document.getElementById(id))
                 formDataToSave.radioSelection = radioSpam.checked ? radioSpam : radioSentiment;
                 formDataToSave.suggestedInputs = Object.values(document.getElementsByClassName('suggested_input_span')).map((s) => s.innerHTML);
-                console.log(formDataToSave)
                 const formData = new FormData(document.getElementById("cls_form"));
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', '/', true);
