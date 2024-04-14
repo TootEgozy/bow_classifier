@@ -90,15 +90,42 @@
         <div id="suggestedInputs"></div>
 
         <script>
+
+            getFormFields = () => {
+                const textElement =  document.getElementById("input_text");
+                const [radioSpam, radioSentiment] = ['input_type_spam', 'input_type_sentiment']
+                   .map((id) => document.getElementById(id))
+                return ([textElement, radioSpam, radioSentiment]);
+            }
+
+            renderInputs = (textInputs) => {
+                const suggestedInputsDiv = document.getElementById('suggestedInputs');
+                suggestedInputsDiv.innerHTML = '';
+                textInputs.forEach(textInput => {
+                    const input_span = document.createElement('span');
+                    input_span.textContent = textInput;
+                    input_span.onclick = () => selectInput(textInput)
+                    input_span.classList.add('suggested_input_span')
+                    suggestedInputsDiv.appendChild(input_span);
+                })
+            }
+
             // add a logic to determine if there's text inside the textarea, and if so, get the elements from the
             // form and attach to the document
             window.addEventListener('load', (event) => {
                 generate_inputs_btn = document.getElementById('generateInputsBtn');
                 generate_inputs_btn.click()
+
+                const strFormData = localStorage.getItem('formData');
+                if (strFormData) {
+                    const [textElement, radioSpam, radioSentiment] = getFormFields();
+                    const formData = JSON.parse(strFormData)
+                    textElement.value = formData.textInput;
+                    formData.radioSelection.checked = true; // what happens if it's sentiment and spam is already checked?
+                    renderInputs(formData.suggestedInputs);
+                }
+
             })
-
-            window.addEventListener('load', () => console.log('loaded'))
-
 
             handleSubmit = (event) => {
                 const formDataToSave = {}
@@ -107,6 +134,7 @@
                     .map((id) => document.getElementById(id))
                 formDataToSave.radioSelection = radioSpam.checked ? radioSpam : radioSentiment;
                 formDataToSave.suggestedInputs = Object.values(document.getElementsByClassName('suggested_input_span')).map((s) => s.innerHTML);
+                localStorage.setItem('formData', JSON.stringify(formDataToSave))
                 const formData = new FormData(document.getElementById("cls_form"));
                 const xhr = new XMLHttpRequest();
                 xhr.open('POST', '/', true);
