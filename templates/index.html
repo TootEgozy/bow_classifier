@@ -113,9 +113,6 @@
             // add a logic to determine if there's text inside the textarea, and if so, get the elements from the
             // form and attach to the document
             window.addEventListener('load', (event) => {
-                generate_inputs_btn = document.getElementById('generateInputsBtn');
-                generate_inputs_btn.click()
-
                 const strFormData = localStorage.getItem('formData');
                 if (strFormData) {
                     const [textElement, radioSpam, radioSentiment] = getFormFields();
@@ -123,8 +120,10 @@
                     textElement.value = formData.textInput;
                     formData.radioSelection.checked = true; // what happens if it's sentiment and spam is already checked?
                     renderInputs(formData.suggestedInputs);
+                } else {
+                    generate_inputs_btn = document.getElementById('generateInputsBtn');
+                    generate_inputs_btn.click()
                 }
-
             })
 
             handleSubmit = (event) => {
