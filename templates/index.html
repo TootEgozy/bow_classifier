@@ -71,6 +71,7 @@
             <div class="text_input_container">
                 <label for="input_text">Enter Text to classify, or try an input from the list below</label>
                 <textarea id="input_text" name="input_text" value="{{ request.form.get('input_text', '') }}" required></textarea>
+                <button id="clear_text_btn" onclick="clearText()">clear</button>
                 <div class="radio_container">
                     <input type="radio" id="input_type_spam" name="input_type" value="spam" required checked/>
                     <label for="input_type_spam">detect spam</label>
@@ -90,6 +91,11 @@
         <div id="suggestedInputs"></div>
 
         <script>
+
+            clearText = () => {
+                const text_input = document.getElementById('input_text');
+                text_input.value = '';
+            }
 
             getFormFields = () => {
                 const textElement =  document.getElementById("input_text");
