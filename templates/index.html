@@ -110,20 +110,18 @@
                 })
             }
 
-            // add a logic to determine if there's text inside the textarea, and if so, get the elements from the
-            // form and attach to the document
             window.addEventListener('load', (event) => {
                 const strFormData = localStorage.getItem('formData');
                 if (strFormData) {
                     const [textElement, radioSpam, radioSentiment] = getFormFields();
                     const formData = JSON.parse(strFormData)
                     textElement.value = formData.textInput;
-                    formData.radioSelection.checked = true; // what happens if it's sentiment and spam is already checked?
+                    const radioBtn = document.getElementById(formData.radioSelection);
+                    radioBtn.checked = true;
                     renderInputs(formData.suggestedInputs);
                 } else {
                     generate_inputs_btn = document.getElementById('generateInputsBtn');
                     generate_inputs_btn.click()
-                    console.log('clicked generateInputsBtn')
                 }
             })
 
@@ -132,7 +130,7 @@
                 formDataToSave.textInput = document.getElementById("input_text").value;
                 const [radioSpam, radioSentiment] = ['input_type_spam', 'input_type_sentiment']
                     .map((id) => document.getElementById(id))
-                formDataToSave.radioSelection = radioSpam.checked ? radioSpam : radioSentiment;
+                formDataToSave.radioSelection = radioSpam.checked ? radioSpam.id : radioSentiment.id;
                 formDataToSave.suggestedInputs = Object.values(document.getElementsByClassName('suggested_input_span')).map((s) => s.innerHTML);
                 localStorage.setItem('formData', JSON.stringify(formDataToSave))
                 const formData = new FormData(document.getElementById("cls_form"));
