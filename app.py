@@ -1,7 +1,10 @@
 from flask import Flask, render_template, request, jsonify
 from index import process_learning_data, classify_input, get_inputs_for_user
+from flask_cors import CORS
+from flask_sse import sse
 
 app = Flask(__name__)
+CORS(app)
 
 learning_data = {}
 
@@ -38,6 +41,13 @@ def initialize_learning_data():
         print('added learning data')
         return jsonify({'success': True})
 
+
+@app.route('/events')
+def events():
+    # Simulate data processing (replace with your actual logic)
+    import time
+    time.sleep(10)  # Simulate 5 seconds of processing
+    return sse.publish({'message': 'Server is ready!'})
 
 if __name__ == '__main__':
     # dev server
