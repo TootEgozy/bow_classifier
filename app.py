@@ -23,15 +23,15 @@ learning_data = {}
 #         return render_template('loading.html')
 #
 # @app.route('/generate-inputs', methods=['POST'])
-# def generate_inputs():
-#     try:
-#         data = request.get_json()
-#         cls_type = data.get('cls_type')
-#         count = data.get('count')
-#         inputs = get_inputs_for_user(cls_type, count)
-#         return jsonify(inputs=inputs)
-#     except Exception as e:
-#         return jsonify(error=str(e)), 400
+def generate_inputs():
+     try:
+         data = request.get_json()
+         cls_type = data.get('cls_type')
+         count = data.get('count')
+         inputs = get_inputs_for_user(cls_type, count)
+         return jsonify(inputs=inputs)
+     except Exception as e:
+         return jsonify(error=str(e)), 400
 
 @app.route('/process_learning_data', methods=['GET'])
 def initialize_learning_data():
