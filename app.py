@@ -40,8 +40,8 @@ def initialize_learning_data():
         learning_data = process_learning_data()
         print('added learning data')
         return jsonify({'processing_done': True})
-    else:
-        return jsonify({'processing_done': True})
+    # else:
+    #     return jsonify({'processing_done': True})
 
 
 if __name__ == '__main__':
