@@ -22,7 +22,7 @@ def initialize_learning_data():
 # get the cls type and a count from the user and return sample inputs
 
 
-@app.route('/generate-inputs', methods=['POST'])
+@app.route('/generate_inputs', methods=['POST'])
 def generate_inputs():
     try:
         data = request.get_json()
@@ -38,8 +38,9 @@ def generate_inputs():
 @app.route('/classify', methods=['POST'])
 def index():
     if learning_data:
-        input_text = request.form.get('input_text')
-        cls_type = request.form.get('cls_type')
+        data = request.get_json()
+        input_text = data.get('input_text')
+        cls_type = data.get('cls_type')
         cls_result = classify_input(input_text, cls_type, learning_data[cls_type])
         return jsonify(result=cls_result)
     else:
