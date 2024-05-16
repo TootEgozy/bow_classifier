@@ -9,7 +9,7 @@ learning_data = {}
 
 
 # make sure that learning data is loaded
-@app.route('/process_learning_data', methods=['GET'])
+@app.route('/server_ready', methods=['GET'])
 def initialize_learning_data():
     global learning_data
     if not learning_data:
