@@ -15,9 +15,9 @@ def initialize_learning_data():
     if not learning_data:
         learning_data = process_learning_data()
         print('added learning data')
-        return jsonify({'processing_done': True})
+        return jsonify({'server_ready': True})
     else:
-        return jsonify({'processing_done': True})
+        return jsonify({'server_ready': True})
 
 # get the cls type and a count from the user and return sample inputs
 
