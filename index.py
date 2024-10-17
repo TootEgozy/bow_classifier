@@ -75,7 +75,6 @@ def get_inputs_for_user(cls_type, count):
         case 'spam':
             inputs = get_texts_by_label(cls_type, 'spam', half_count, 1) + \
                 get_texts_by_label(cls_type, 'ham', half_count, 1)
-            return inputs
         case 'sentiment':
             inputs = get_texts_by_label(cls_type, '0', half_count, 5, 'sentiment_1.csv') + \
                      get_texts_by_label(cls_type, '4', half_count, 5, 'sentiment_4.csv')
