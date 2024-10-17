@@ -5,7 +5,8 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-learning_data = {}
+learning_data = process_learning_data()
+print('added learning data')
 
 
 # make sure that learning data is loaded

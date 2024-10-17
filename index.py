@@ -1,5 +1,6 @@
 import csv
 import os
+import random
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
@@ -64,9 +65,12 @@ def classify_input(input, cls_type, cls_data):
     predicted_label = classifier.predict(input_vec)[0]
     return label_to_text(cls_type, predicted_label)
 
+def round_up_to_even(n):
+    return n + 1 if n % 2 != 0 else n
 
 def get_inputs_for_user(cls_type, count):
-    half_count = int(count / 2)
+    half_count = int(round_up_to_even(count) / 2)
+    inputs = []
     match cls_type:
         case 'spam':
             inputs = get_texts_by_label(cls_type, 'spam', half_count, 1) + \
@@ -75,4 +79,4 @@ def get_inputs_for_user(cls_type, count):
         case 'sentiment':
             inputs = get_texts_by_label(cls_type, '0', half_count, 5, 'sentiment_1.csv') + \
                      get_texts_by_label(cls_type, '4', half_count, 5, 'sentiment_4.csv')
-            return inputs
+    return(random.sample(inputs, count))
