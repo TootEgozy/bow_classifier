@@ -1,4 +1,7 @@
+import os
+
 from flask import Flask, request, jsonify
+from waitress import serve
 from index import process_learning_data, classify_input, get_inputs_for_user
 from flask_cors import CORS
 
@@ -8,6 +11,8 @@ CORS(app)
 learning_data = process_learning_data()
 print('added learning data')
 
+
+port = int(os.environ.get("PORT", 5000))
 
 # make sure that learning data is loaded
 @app.route('/server_ready', methods=['GET'])
@@ -50,6 +55,6 @@ def index():
 
 if __name__ == '__main__':
     # dev server
-    app.run(host='0.0.0.0', port=5000)
+    # app.run(host='0.0.0.0', port=5000)
     # production server
-    # serve(app, host='0.0.0.0', port=5000)
+    serve(app, host='0.0.0.0', port=port)
