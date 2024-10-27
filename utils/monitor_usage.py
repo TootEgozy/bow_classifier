@@ -14,11 +14,9 @@ def monitor_usage(duration=300, interval=5):
     start_time = time.time()
 
     while time.time() - start_time < duration:
-        # Get CPU and memory usage
         cpu_usage = process.cpu_percent(interval=interval)
         memory_info = process.memory_info()
 
-        # Print the usage
         print(f"Time: {time.strftime('%H:%M:%S')}")
         print(f"CPU Usage: {cpu_usage}%")
         print(f"Memory Usage: {memory_info.rss / (1024 * 1024):.2f} MB")  # RSS in MB

@@ -26,8 +26,6 @@ def initialize_learning_data():
         return jsonify({'server_ready': True})
 
 # get the cls type and a count from the user and return sample inputs
-
-
 @app.route('/generate_inputs', methods=['POST'])
 def generate_inputs():
     try:
