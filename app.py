@@ -1,9 +1,11 @@
 import os
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from waitress import serve
 from index import process_learning_data, classify_input, get_inputs_for_user
 from flask_cors import CORS
+
+from utils.request_limiter import RequestLimiter
 
 app = Flask(__name__)
 CORS(app)
@@ -13,6 +15,16 @@ print('added learning data')
 
 
 port = int(os.environ.get("PORT", 5000))
+
+
+request_limiter = RequestLimiter()
+
+@app.before_request
+def before_request():
+    blocked = request_limiter.check_handle_limit_reached()
+    if blocked:
+        return make_response(jsonify('requests are blocked'), 400)
+
 
 # make sure that learning data is loaded
 @app.route('/server_ready', methods=['GET'])
