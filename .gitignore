@@ -4,3 +4,7 @@ venv/
 
 # Code Editor
 .idea/
+
+# python generated files
+__pycache__/
+*.pyc

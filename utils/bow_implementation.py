@@ -1,3 +1,6 @@
+# This code is not affecting the project,
+# it was written to practice the implementation of a BOW algorithm.
+
 import nltk, re
 from nltk.corpus import wordnet
 from nltk.corpus import stopwords
@@ -7,7 +10,7 @@ from collections import Counter
 
 normalizer = WordNetLemmatizer()
 
-# get the most common pos for a word by counting it's occurrences in a dictionary
+# get the most common pos for a word by counting its occurrences in a dictionary
 def get_pos(word):
     pos_counts = Counter({"n": 0, "v": 0, "a": 0, "r": 0})
     pos_options = wordnet.synsets(word)

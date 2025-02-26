@@ -1,8 +1,9 @@
 project TODO
 
-1. find a larger file to classify spam
-2. another file to classify sarcasm / other thing
-3. write a function which receives label, text column and amount and returns an array of the text from the learned_data object
-4. write a test suit for the model
-5. allow the user to either input text or get a random input by type
-6. better layout
+
+find another csv file to classify sarcasm.
+add tests.
+improve documentation.
+unify error handling - create an api of error codes and responses to return on each error.
+catch errors on app initialisation and reload the entire server.
+deploy and test in production.

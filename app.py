@@ -1,4 +1,5 @@
 import os
+import threading
 
 from flask import Flask, request, jsonify, make_response
 from waitress import serve
@@ -6,6 +7,7 @@ from index import process_learning_data, classify_input, get_inputs_for_user
 from flask_cors import CORS
 
 from utils.request_limiter import RequestLimiter
+from utils.memory_unloader import MemoryUnloader
 
 app = Flask(__name__)
 CORS(app)
@@ -13,17 +15,33 @@ CORS(app)
 learning_data = process_learning_data()
 print('added learning data')
 
-
 port = int(os.environ.get("PORT", 5000))
 
-
 request_limiter = RequestLimiter()
+memory_unloader = MemoryUnloader(app)
+
+learning_data_lock = threading.Lock()
+
+def load_learning_data():
+    global learning_data
+    with learning_data_lock:
+        learning_data = process_learning_data()  # Loading data
+    print('added learning data')
+
+def unload_learning_data():
+    global learning_data
+    with learning_data_lock:
+        learning_data = None
+    print("unloaded learning data")
 
 @app.before_request
 def before_request():
     blocked = request_limiter.check_handle_limit_reached()
     if blocked:
-        return make_response(jsonify('requests are blocked'), 400)
+        return make_response(jsonify('requests are blocked'), 429)
+    else:
+        if learning_data is not None:
+            memory_unloader.reset_timer()
 
 
 # make sure that learning data is loaded
@@ -31,8 +49,7 @@ def before_request():
 def initialize_learning_data():
     global learning_data
     if not learning_data:
-        learning_data = process_learning_data()
-        print('added learning data')
+        load_learning_data()
         return jsonify({'server_ready': True})
     else:
         return jsonify({'server_ready': True})
@@ -60,11 +77,12 @@ def index():
         cls_result = classify_input(input_text, cls_type, learning_data[cls_type])
         return jsonify(result=cls_result)
     else:
+        threading.Thread(target=load_learning_data).start()
         return jsonify({'error': 'missing learning data'})
 
 
 if __name__ == '__main__':
     # dev server
-    # app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000)
     # production server
-    serve(app, host='0.0.0.0', port=port)
+    # serve(app, host='0.0.0.0', port=port)
