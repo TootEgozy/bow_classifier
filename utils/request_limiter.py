@@ -42,7 +42,6 @@ class RequestLimiter:
             return True
 
         self.request_count += 1
-        print(self.request_count)
         if self.request_count == self.max_requests:
             print('Request Limiter - maximum requests reached')
             self.start_timeout()

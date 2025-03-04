@@ -23,7 +23,9 @@ class MemoryUnloader:
 
     def unload(self):
         print("Memory Unloader - unload memory")
-        self.app.unload_learning_data()
+        # with self.app.app_context():
+        unload = self.app.config['unload_learning_data'];
+        threading.Thread(target=unload).start()
         self.reset_timer()
 
     def stop_timer(self):

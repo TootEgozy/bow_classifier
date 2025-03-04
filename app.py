@@ -12,27 +12,29 @@ from utils.memory_unloader import MemoryUnloader
 app = Flask(__name__)
 CORS(app)
 
-learning_data = process_learning_data()
-print('added learning data')
+learning_data = None
+learning_data_lock = threading.Lock()
 
 port = int(os.environ.get("PORT", 5000))
-
 request_limiter = RequestLimiter()
 memory_unloader = MemoryUnloader(app)
 
-learning_data_lock = threading.Lock()
 
 def load_learning_data():
     global learning_data
     with learning_data_lock:
-        learning_data = process_learning_data()  # Loading data
-    print('added learning data')
+        learning_data = process_learning_data()
+        print('added learning data')
 
 def unload_learning_data():
     global learning_data
     with learning_data_lock:
         learning_data = None
-    print("unloaded learning data")
+        print("unloaded learning data")
+
+# append these methods to app, so that dependencies can access them
+app.config['load_learning_data'] = load_learning_data
+app.config['unload_learning_data'] = unload_learning_data
 
 @app.before_request
 def before_request():
@@ -42,6 +44,10 @@ def before_request():
     else:
         if learning_data is not None:
             memory_unloader.reset_timer()
+        else:
+            threading.Thread(target=load_learning_data).start()
+            memory_unloader.reset_timer()
+            return make_response(jsonify('missing learning data'), 503)
 
 
 # make sure that learning data is loaded
@@ -49,10 +55,10 @@ def before_request():
 def initialize_learning_data():
     global learning_data
     if not learning_data:
-        load_learning_data()
-        return jsonify({'server_ready': True})
+        load_learning_data() # wait for this process
+        return jsonify({'server_ready': True}, 200)
     else:
-        return jsonify({'server_ready': True})
+        return jsonify({'server_ready': True}, 200)
 
 # get the cls type and a count from the user and return sample inputs
 @app.route('/generate_inputs', methods=['POST'])
@@ -70,15 +76,12 @@ def generate_inputs():
 # classify input
 @app.route('/classify', methods=['POST'])
 def index():
-    if learning_data:
-        data = request.get_json()
-        input_text = data.get('input_text')
-        cls_type = data.get('cls_type')
-        cls_result = classify_input(input_text, cls_type, learning_data[cls_type])
-        return jsonify(result=cls_result)
-    else:
-        threading.Thread(target=load_learning_data).start()
-        return jsonify({'error': 'missing learning data'})
+    data = request.get_json()
+    input_text = data.get('input_text')
+    cls_type = data.get('cls_type')
+    cls_result = classify_input(input_text, cls_type, learning_data[cls_type])
+    return jsonify(result=cls_result)
+
 
 
 if __name__ == '__main__':
