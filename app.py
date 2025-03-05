@@ -51,14 +51,14 @@ def before_request():
 
 
 # make sure that learning data is loaded
-@app.route('/server_ready', methods=['GET'])
-def initialize_learning_data():
-    global learning_data
-    if not learning_data:
-        load_learning_data() # wait for this process
-        return jsonify({'server_ready': True}, 200)
-    else:
-        return jsonify({'server_ready': True}, 200)
+# @app.route('/server_ready', methods=['GET'])
+# def initialize_learning_data():
+#    global learning_data
+#    if not learning_data:
+#        load_learning_data() # wait for this process
+#        return jsonify({'server_ready': True}, 200)
+#     else:
+#         return jsonify({'server_ready': True}, 200)
 
 # get the cls type and a count from the user and return sample inputs
 @app.route('/generate_inputs', methods=['POST'])
