@@ -45,20 +45,22 @@ def before_request():
         if learning_data is not None:
             memory_unloader.reset_timer()
         else:
-            threading.Thread(target=load_learning_data).start()
-            memory_unloader.reset_timer()
-            return make_response(jsonify('missing learning data'), 503)
+            if request.path != "/server_ready":
+                threading.Thread(target=load_learning_data).start()
+                memory_unloader.reset_timer()
+                return make_response(jsonify('missing learning data'), 503)
 
 
 # make sure that learning data is loaded
-# @app.route('/server_ready', methods=['GET'])
-# def initialize_learning_data():
-#    global learning_data
-#    if not learning_data:
-#        load_learning_data() # wait for this process
-#        return jsonify({'server_ready': True}, 200)
-#     else:
-#         return jsonify({'server_ready': True}, 200)
+# TODO: use a websocket for this
+@app.route('/server_ready', methods=['GET'])
+def initialize_learning_data():
+   global learning_data
+   if not learning_data:
+       load_learning_data() # wait for this process
+       return jsonify({'server_ready': True}, 200)
+   else:
+        return jsonify({'server_ready': True}, 200)
 
 # get the cls type and a count from the user and return sample inputs
 @app.route('/generate_inputs', methods=['POST'])
