@@ -4,8 +4,7 @@ project TODO
 find another csv file to classify sarcasm.
 add tests.
 improve documentation.
-unify error handling - create an api of error codes and responses to return on each error.
 catch errors on app initialisation and reload the entire server.
 deploy and test in production.
 
-implement websocket logic
+use the logging library for better logs
