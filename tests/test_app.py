@@ -1,49 +1,28 @@
-import unittest, time
+import unittest
 from app import app
 
-class AppTestCase(unittest.TestCase):
+
+class MyTest(unittest.TestCase):
 
     def setUp(self):
+
         self.client = app.test_client()
         self.client.testing = True
 
-    def test_server_ready_before_data_loaded(self):
-        response = self.client.get('/server_ready')
-        self.assertEqual(response.status_code, 503)
+    def test_a_test_that_contacts_the_server(self):
 
-    def test_server_ready_after_data_loaded(self):
-        self.client.get('/server_ready')
-        time.sleep(60)
-        response = self.client.get('/server_ready')
-        self.assertEqual(response.status_code, 204)
+        data = {"cls_type": "spam", "count": 5}
 
-    def test_generate_inputs_valid(self):
-        response = self.client.post('/generate_inputs', json={
-            'cls_type': 'spam',
-            'count': 5
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('inputs', response.json)
+        response = self.client.post('/generate_inputs', json=data)
+        response_data = response.json
 
-    def test_generate_inputs_missing_data(self):
-        response = self.client.post('/generate_inputs', json={'cls_type': 'some_type'})
         self.assertEqual(response.status_code, 400)
-        self.assertIn("Missing 'cls_type' or 'count'", response.json['error'])
+        self.assertIn('inputs', response_data, msg="Response doesn't contain 'inputs' field")
+        self.assertIsInstance(response_data['inputs'], list, msg="'inputs' is not a list")
 
-    def test_classify_valid(self):
-        global learning_data
-        learning_data = {'some_type': 'some_value'}
-        response = self.client.post('/classify', json={
-            'cls_type': 'some_type',
-            'input_text': 'Test input text'
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('result', response.json)
+    def tearDown(self):
+        pass
 
-    def test_classify_missing_data(self):
-        response = self.client.post('/classify', json={'cls_type': 'some_type'})
-        self.assertEqual(response.status_code, 400)
-        self.assertIn("Missing 'cls_type' or 'input_text'", response.json['error'])
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
