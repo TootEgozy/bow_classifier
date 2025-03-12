@@ -97,6 +97,6 @@ def index():
 
 if __name__ == '__main__':
     # dev server
-    app.run(host='0.0.0.0', port=5000)
+    # app.run(host='0.0.0.0', port=5000)
     # production server
-    # serve(app, host='0.0.0.0', port=port)
+    serve(app, host='0.0.0.0', port=port)
