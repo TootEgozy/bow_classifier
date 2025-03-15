@@ -27,15 +27,18 @@ def load_learning_data():
         learning_data = process_learning_data()
         print('added learning data')
 
+
 def unload_learning_data():
     global learning_data
     with learning_data_lock:
         learning_data = None
         print("unloaded learning data")
 
+
 # append these methods to app, so that dependencies can access them
 app.config['load_learning_data'] = load_learning_data
 app.config['unload_learning_data'] = unload_learning_data
+
 
 # middleware to check if requests are blocked, resetting the memory_unloader timer,
 # and if learning _data is missing load it
@@ -58,6 +61,7 @@ def before_request():
 @app.route('/server_ready', methods=['GET'])
 def initialize_learning_data():
     return make_response("", 204)
+
 
 # get the classification type and a count from the user and return sample inputs
 @app.route('/generate_inputs', methods=['POST'])
