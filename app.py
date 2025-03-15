@@ -13,6 +13,7 @@ app = Flask(__name__)
 CORS(app)
 
 learning_data = None
+cls_type = "spam"
 learning_data_lock = threading.Lock()
 data_loading_thread = None
 
@@ -21,10 +22,10 @@ request_limiter = RequestLimiter()
 memory_unloader = MemoryUnloader(app)
 
 
-def load_learning_data():
+def load_learning_data(cls_type):
     global learning_data
     with learning_data_lock:
-        learning_data = process_learning_data()
+        learning_data = process_learning_data(cls_type)
         print('added learning data')
 
 
@@ -42,17 +43,23 @@ app.config['unload_learning_data'] = unload_learning_data
 
 # middleware to check if requests are blocked, resetting the memory_unloader timer,
 # and if learning _data is missing load it
+
+
+# check if
 @app.before_request
 def before_request():
-    global learning_data, data_loading_thread
+    global learning_data, cls_type, data_loading_thread
     blocked = request_limiter.check_handle_limit_reached()
     if blocked:
         return make_response(jsonify({"message": "Requests are blocked, please try again later"}), 429)
     else:
         memory_unloader.reset_timer()
-        if learning_data is None:
+        request_cls_type = request.args.get("cls_type") or "spam"
+        if learning_data is None or request_cls_type != cls_type:
+            # TODO: continue checking the conditions here to start a new thread
             if data_loading_thread is None or not data_loading_thread.is_alive():
-                data_loading_thread = threading.Thread(target=load_learning_data)
+                cls_type = request.args.get("cls_type") or "spam"
+                data_loading_thread = threading.Thread(target=load_learning_data, args=(cls_type,))
                 data_loading_thread.start()
             return make_response(jsonify({"message": "Missing learning data"}), 503)
 
@@ -92,7 +99,7 @@ def index():
         if cls_type is None or input_text is None:
             return make_response(jsonify({"error": "Missing 'cls_type' or 'input_text'"}), 400)
 
-        cls_result = classify_input(input_text, cls_type, learning_data[cls_type])
+        cls_result = classify_input(input_text, cls_type, learning_data)
         return make_response(jsonify({"result": cls_result}), 200)
     except Exception as e:
         print(e)
