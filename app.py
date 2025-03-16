@@ -62,7 +62,7 @@ def before_request():
             return make_response(jsonify({"message": "Missing learning data"}), 503)
 
 
-# an endpoint to test if the server is ready, if we reached it then learning data is loaded.
+# an endpoint to test if the server is ready, if we reached it then learning data is loaded. TODO: remove this
 @app.route('/server_ready', methods=['GET'])
 def initialize_learning_data():
     return make_response("", 204)
