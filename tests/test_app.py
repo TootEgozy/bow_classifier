@@ -13,7 +13,7 @@ class MyTest(unittest.TestCase):
 
         data = {"cls_type": "spam", "count": 5}
 
-        response = self.client.post('/generate_inputs', json=data)
+        response = self.client.post('/generate_inputs?cls_type=spam', json=data)
         response_data = response.json
 
         self.assertEqual(response.status_code, 400)
