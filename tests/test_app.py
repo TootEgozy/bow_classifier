@@ -12,12 +12,10 @@ class MyTest(unittest.TestCase):
         self.client.testing = True
 
     def test_a_test_that_contacts_the_server(self):
-        response = self.client.get('/server_ready?cls_type=spam')
-
-        wait(5)
-
         data = {"cls_type": "spam", "count": 5}
 
+        self.client.get('/server_ready?cls_type=spam')
+        wait(5)
         response = self.client.post('/generate_inputs?cls_type=spam', json=data)
         response_data = response.json
 
