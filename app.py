@@ -56,6 +56,8 @@ def before_request():
         memory_unloader.reset_timer()
         request_cls_type = request.args.get("cls_type") or "spam"
         if learning_data is None or request_cls_type != cls_type:
+            print(learning_data)
+            print(request_cls_type == cls_type)
             cls_type = request.args.get("cls_type") or "spam"
             data_loading_thread = threading.Thread(target=load_learning_data, args=(cls_type,))
             data_loading_thread.start()
