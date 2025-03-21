@@ -10,12 +10,6 @@ from utils.get_text_by_label import get_texts_by_label
 from utils.get_data_path import get_data_path
 
 
-def answer_templates(category):
-    if (category == 'spam'):
-        return {
-            "spam": "We are {}% certain that your input is spam"
-        }
-
 def process_learning_files(cls_type, label_index, text_index):
     learning_data_path = get_data_path(cls_type)
     filenames = os.listdir(learning_data_path)
@@ -44,6 +38,7 @@ def process_learning_data(cls_type):
 
 def label_to_text(cls_type, predicted_label):
     if(cls_type == 'sentiment'):
+        print(predicted_label)
         match predicted_label:
             case '0':
                 return 'negative'

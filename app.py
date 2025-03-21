@@ -1,5 +1,7 @@
 import os
 import threading
+import psutil
+import gc
 
 from flask import Flask, request, jsonify, make_response
 from waitress import serve
@@ -27,6 +29,8 @@ def load_learning_data(cls_type):
     with learning_data_lock:
         learning_data = process_learning_data(cls_type)
         print('added learning data')
+        process = psutil.Process(os.getpid())
+        print(f"Memory usage (added learning data): {process.memory_info().rss / 1024 ** 2:.2f} MB")
 
 
 def unload_learning_data():
@@ -48,6 +52,10 @@ app.config['unload_learning_data'] = unload_learning_data
 # check if
 @app.before_request
 def before_request():
+    gc.collect()
+    process = psutil.Process(os.getpid())
+    print(f"Memory usage: {process.memory_info().rss / 1024 ** 2:.2f} MB")
+
     global learning_data, cls_type, data_loading_thread
     blocked = request_limiter.check_handle_limit_reached()
     if blocked:
@@ -56,8 +64,6 @@ def before_request():
         memory_unloader.reset_timer()
         request_cls_type = request.args.get("cls_type") or "spam"
         if learning_data is None or request_cls_type != cls_type:
-            print(learning_data)
-            print(request_cls_type == cls_type)
             cls_type = request.args.get("cls_type") or "spam"
             data_loading_thread = threading.Thread(target=load_learning_data, args=(cls_type,))
             data_loading_thread.start()
@@ -75,7 +81,7 @@ def initialize_learning_data():
 def generate_inputs():
     try:
         data = request.get_json()
-        cls_type = data.get('cls_type')
+        cls_type = request.args.get("cls_type");
         count = data.get('count')
 
         if cls_type is None or count is None:
@@ -94,7 +100,7 @@ def index():
     try:
         data = request.get_json()
         input_text = data.get('input_text')
-        cls_type = data.get('cls_type')
+        cls_type = request.args.get("cls_type")
 
         if cls_type is None or input_text is None:
             return make_response(jsonify({"error": "Missing 'cls_type' or 'input_text'"}), 400)
