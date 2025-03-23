@@ -24,7 +24,6 @@ memory_unloader = MemoryUnloader(app)
 
 
 def load_learning_data():
-    print("in loading learning data")
     global learning_data, cls_type, learning_data_lock
 
     with learning_data_lock:
@@ -76,11 +75,9 @@ def unload_learning_data():
 # handle the global parameters and flags and start a new thread to add the relevant learning data.
 # gc is called to improve memory efficiency.
 def handle_learning_data_loading():
-    print("in handle data loading")
     global learning_data, cls_type, data_loading_thread
 
     if learning_data and not data_loading_thread.is_alive():
-        print("no alive thread so gc data")
         learning_data = None
         gc.collect()
 
@@ -100,7 +97,6 @@ app.config['unload_learning_data'] = unload_learning_data
 # check if
 @app.before_request
 def before_request():
-    print("in before request middleware")
     process = psutil.Process(os.getpid())
     print(f"Memory usage: {process.memory_info().rss / 1024 ** 2:.2f} MB")
 
@@ -112,10 +108,17 @@ def before_request():
         memory_unloader.reset_timer()
 
         request_cls_type = request.args.get("cls_type") or "spam"
-        if learning_data is None or (request_cls_type != cls_type):
+
+        if cls_type is None or (request_cls_type != cls_type):
+            # print(f"cls_type match: {request_cls_type == cls_type}")
+            # print(f"Learning data is: {learning_data}")
             cls_type = request_cls_type
             handle_learning_data_loading()
             return make_response(jsonify({"message": "Missing learning data"}), 503)
+
+        elif learning_data is None and data_loading_thread.is_alive():
+            return make_response(jsonify({"message": "Missing learning data"}), 503)
+
 
 
 # an endpoint to test if the server is ready, if we reached it then learning data is loaded. TODO: remove this
