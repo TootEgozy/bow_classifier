@@ -15,53 +15,77 @@ app = Flask(__name__)
 CORS(app)
 
 learning_data = None
-cls_type = "spam"
+cls_type = None
 learning_data_lock = threading.Lock()
-data_loading_event = threading.Event()
 data_loading_thread = None
-
 port = int(os.environ.get("PORT", 5000))
 request_limiter = RequestLimiter()
 memory_unloader = MemoryUnloader(app)
 
 
-# def load_learning_data(cls_type):
-#     global learning_data
+def load_learning_data():
+    print("in loading learning data")
+    global learning_data, cls_type, learning_data_lock
+
+    with learning_data_lock:
+        learning_data = process_learning_data(cls_type)
+        print('added learning data')
+        process = psutil.Process(os.getpid())
+        print(f"Memory usage (added learning data): {process.memory_info().rss / 1024 ** 2:.2f} MB")
+
+
+
+
+#
+# def load_learning_data():
+#     global learning_data, cls_type
 #     with learning_data_lock:
-#         if learning_data is not None:
-#             del learning_data  # Force delete the old learning data
-#             gc.collect()
 #         learning_data = process_learning_data(cls_type)
 #         print('added learning data')
 #         process = psutil.Process(os.getpid())
 #         print(f"Memory usage (added learning data): {process.memory_info().rss / 1024 ** 2:.2f} MB")
-
-def load_learning_data(cls_type):
-    global learning_data
-    if data_loading_event.is_set():
-        print("Learning data is already being loaded. Skipping duplicate load.")
-        return
-
-    data_loading_event.set()
-    try:
-        with learning_data_lock:
-            if learning_data is not None:
-                del learning_data
-                gc.collect()
-                learning_data = None
-            learning_data = process_learning_data(cls_type)
-            print('Added learning data')
-    finally:
-        data_loading_event.clear()
-        process = psutil.Process(os.getpid())
-        print(f"Memory usage (added learning data): {process.memory_info().rss / 1024 ** 2:.2f} MB")
-
+#
+# def load_learning_data(cls_type):
+#     global learning_data
+#     if data_loading_event.is_set():
+#         print("Learning data is already being loaded. Skipping duplicate load.")
+#         return
+#
+#     data_loading_event.set()
+#     try:
+#         with learning_data_lock:
+#             if learning_data is not None:
+#                 del learning_data
+#                 gc.collect()
+#                 learning_data = None
+#             learning_data = process_learning_data(cls_type)
+#             print('Added learning data')
+#     finally:
+#         data_loading_event.clear()
+#         process = psutil.Process(os.getpid())
+#         print(f"Memory usage (added learning data): {process.memory_info().rss / 1024 ** 2:.2f} MB")
+#
 
 def unload_learning_data():
     global learning_data
     with learning_data_lock:
         learning_data = None
         print("unloaded learning data")
+
+# if it's the first run or a request with a different cls_type is received,
+# handle the global parameters and flags and start a new thread to add the relevant learning data.
+# gc is called to improve memory efficiency.
+def handle_learning_data_loading():
+    print("in handle data loading")
+    global learning_data, cls_type, data_loading_thread
+
+    if learning_data and not data_loading_thread.is_alive():
+        print("no alive thread so gc data")
+        learning_data = None
+        gc.collect()
+
+    data_loading_thread = threading.Thread(target=load_learning_data)
+    data_loading_thread.start()
 
 
 # append these methods to app, so that dependencies can access them
@@ -76,6 +100,7 @@ app.config['unload_learning_data'] = unload_learning_data
 # check if
 @app.before_request
 def before_request():
+    print("in before request middleware")
     process = psutil.Process(os.getpid())
     print(f"Memory usage: {process.memory_info().rss / 1024 ** 2:.2f} MB")
 
@@ -85,13 +110,11 @@ def before_request():
         return make_response(jsonify({"message": "Requests are blocked, please try again later"}), 429)
     else:
         memory_unloader.reset_timer()
-        request_cls_type = request.args.get("cls_type") or "spam"
-        if learning_data is None or request_cls_type != cls_type:
-            cls_type = request.args.get("cls_type") or "spam"
 
-            if not data_loading_event.is_set():
-                data_loading_thread = threading.Thread(target=load_learning_data, args=(cls_type,))
-                data_loading_thread.start()
+        request_cls_type = request.args.get("cls_type") or "spam"
+        if learning_data is None or (request_cls_type != cls_type):
+            cls_type = request_cls_type
+            handle_learning_data_loading()
             return make_response(jsonify({"message": "Missing learning data"}), 503)
 
 
@@ -122,12 +145,12 @@ def generate_inputs():
 # classify input from user
 @app.route('/classify', methods=['POST'])
 def index():
+    global cls_type, learning_data
     try:
         data = request.get_json()
         input_text = data.get('input_text')
-        cls_type = request.args.get("cls_type")
 
-        if cls_type is None or input_text is None:
+        if input_text is None:
             return make_response(jsonify({"error": "Missing 'cls_type' or 'input_text'"}), 400)
 
         cls_result = classify_input(input_text, cls_type, learning_data)
