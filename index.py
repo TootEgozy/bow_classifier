@@ -38,7 +38,6 @@ def process_learning_data(cls_type):
 
 def label_to_text(cls_type, predicted_label):
     if(cls_type == 'sentiment'):
-        print(predicted_label)
         match predicted_label:
             case '0':
                 return 'negative'

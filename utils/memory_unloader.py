@@ -15,14 +15,14 @@ class MemoryUnloader:
         self.app = app
 
     def reset_timer(self):
-        print("Memory Unloader - resetting timer")
+        print("Memory Unloader: resetting timer")
         if self.timer:
             self.timer.cancel()
         self.timer = threading.Timer(self.time_frame, self.unload)
         self.timer.start()
 
     def unload(self):
-        print("Memory Unloader - unload memory")
+        print("Memory Unloader: unload memory")
         # with self.app.app_context():
         unload = self.app.config['unload_learning_data'];
         threading.Thread(target=unload).start()

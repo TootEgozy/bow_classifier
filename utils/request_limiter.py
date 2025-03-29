@@ -17,14 +17,14 @@ class RequestLimiter:
         self.start_timer()
 
     def start_timer(self):
-        print('Request Limiter - starting timer')
+        print('Request Limiter: starting timer')
         if self.timer:
             self.timer.cancel()
         self.timer = threading.Timer(self.time_frame, self.reset_counter)
         self.timer.start()
 
     def reset_counter(self):
-        print('Request Limiter - resetting counter')
+        print('Request Limiter: resetting counter')
         self.request_count = 0
         self.requests_blocked = False
         self.start_timer()
@@ -43,7 +43,7 @@ class RequestLimiter:
 
         self.request_count += 1
         if self.request_count == self.max_requests:
-            print('Request Limiter - maximum requests reached')
+            print('Request Limiter: maximum requests reached')
             self.start_timeout()
             return True
 
