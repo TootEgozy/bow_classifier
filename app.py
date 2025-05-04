@@ -15,17 +15,15 @@ CORS(app)
 
 # learning_data is the object where the vector matrix is saved.
 learning_data = None
-cls_type = None
 learning_data_lock = threading.Lock()
-data_loading_thread = None
 port = int(os.environ.get("PORT", 5000))
 request_limiter = RequestLimiter()
 
 
 def load_learning_data():
-    global learning_data, cls_type, learning_data_lock
+    global learning_data, learning_data_lock
     with learning_data_lock:
-        learning_data = process_learning_data(cls_type)
+        learning_data = process_learning_data()
         print('added learning data')
         log_memory()
 
@@ -35,17 +33,6 @@ def unload_learning_data():
     with learning_data_lock:
         learning_data = None
         print("unloaded learning data")
-
-# remove previous data from the object learning data, and start a new thread to load it.
-def handle_learning_data_loading():
-    global learning_data, cls_type, data_loading_thread
-
-    if learning_data and not data_loading_thread.is_alive():
-        learning_data = None
-        gc.collect()
-
-    data_loading_thread = threading.Thread(target=load_learning_data)
-    data_loading_thread.start()
 
 
 # append these methods to app, so that dependencies can access them.
@@ -57,18 +44,13 @@ app.config['unload_learning_data'] = unload_learning_data
 @app.before_request
 def before_request():
     try:
-        global learning_data, cls_type, data_loading_thread
+        global learning_data
         blocked = request_limiter.check_handle_limit_reached()
         if blocked:
             return make_response(jsonify({"message": "Requests are blocked, please try again later"}), 429)
         else:
-            request_cls_type = request.args.get("cls_type") or "spam"
-            if cls_type is None or (request_cls_type != cls_type):
-                cls_type = request_cls_type
-                handle_learning_data_loading()
-                return make_response(jsonify({"message": "Missing learning data"}), 503)
-
-            elif learning_data is None and data_loading_thread.is_alive():
+            if learning_data is None:
+                load_learning_data()
                 return make_response(jsonify({"message": "Missing learning data"}), 503)
     finally:
         log_memory()
@@ -86,7 +68,7 @@ def initialize_learning_data():
 def generate_inputs():
     try:
         data = request.get_json()
-        cls_type = request.args.get("cls_type");
+        cls_type = request.args.get("cls_type")
         count = data.get('count')
 
         if cls_type is None or count is None:
@@ -102,15 +84,16 @@ def generate_inputs():
 # classify input.
 @app.route('/classify', methods=['POST'])
 def index():
-    global cls_type, learning_data
+    global learning_data
     try:
         data = request.get_json()
+        cls_type = request.args.get("cls_type")
         input_text = data.get('input_text')
 
         if input_text is None:
             return make_response(jsonify({"error": "Missing 'cls_type' or 'input_text'"}), 400)
 
-        cls_result = classify_input(input_text, cls_type, learning_data)
+        cls_result = classify_input(input_text, cls_type, learning_data["cls_type"])
         return make_response(jsonify({"result": cls_result}), 200)
     except Exception as e:
         print(e)
@@ -122,3 +105,4 @@ if __name__ == '__main__':
     # app.run(host='0.0.0.0', port=5000)
     # production server
     serve(app, host='0.0.0.0', port=port)
+    load_learning_data()
