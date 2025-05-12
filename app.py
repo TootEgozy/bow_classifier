@@ -109,7 +109,7 @@ def index():
         if input_text is None:
             return make_response(jsonify({"error": "Missing 'cls_type' or 'input_text'"}), 400)
 
-        cls_result = classify_input(input_text, cls_type, learning_data["cls_type"])
+        cls_result = classify_input(input_text, cls_type, learning_data[cls_type])
         return make_response(jsonify({"result": cls_result}), 200)
     except Exception as e:
         print(e)
