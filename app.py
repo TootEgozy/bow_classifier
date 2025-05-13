@@ -65,7 +65,7 @@ def before_request():
         if blocked:
             return make_response(jsonify({"message": "Requests are blocked, please try again later"}), 429)
         else:
-            if learning_data is None:
+            if learning_data is None and data_loading_in_progress is False:
                 start_learning_data_load_thread()
                 return make_response(jsonify({"message": "Missing learning data"}), 503)
     finally:
