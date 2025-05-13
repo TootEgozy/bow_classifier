@@ -71,7 +71,9 @@ def before_request():
     finally:
         log_memory()
 
-
+@app.route("/", methods=["GET"])
+def home():
+    return make_response(open("static/index.html").read(), 200)
 
 # an endpoint to test if the server is ready, if we reached it then learning data is loaded.
 @app.route('/server_ready', methods=['GET'])

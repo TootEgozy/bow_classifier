@@ -1,0 +1,60 @@
+<!-- static/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to My API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to My API!</h1>
+
+    <div class="section">
+        <h2>About This Project</h2>
+        <p>This is a simple API that performs machine learning classification. It processes input data and provides classification results based on pre-loaded learning data. The API is built with Flask and is deployed on Heroku.</p>
+    </div>
+
+    <div class="section">
+        <h2>API Endpoints</h2>
+        <ul>
+            <li><strong>/classify</strong> - Classify the input text</li>
+            <li><strong>/generate_inputs</strong> - Generate inputs based on classification type</li>
+            <li><strong>/server_ready</strong> - Check if the server is ready</li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>Powered by Flask and Heroku. API Version 1.0</p>
+    </footer>
+</div>
+
+</body>
+</html>
