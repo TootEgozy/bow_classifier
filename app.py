@@ -59,16 +59,17 @@ app.config['unload_learning_data'] = unload_learning_data
 # middleware to check if requests are blocked, and if learning _data is missing or the wrong type, load it.
 @app.before_request
 def before_request():
+    global learning_data
     try:
-        global learning_data
         blocked = request_limiter.check_handle_limit_reached()
         if blocked:
             return make_response(jsonify({"message": "Requests are blocked, please try again later"}), 429)
         else:
             if learning_data is None and data_loading_in_progress is False:
                 start_learning_data_load_thread()
-                return make_response(jsonify({"message": "Missing learning data"}), 503)
     finally:
+        if learning_data is None:
+            return make_response(jsonify({"message": "Missing learning data"}), 503)
         log_memory()
 
 @app.route("/", methods=["GET"])
@@ -77,7 +78,7 @@ def home():
 
 # an endpoint to test if the server is ready, if we reached it then learning data is loaded.
 @app.route('/server_ready', methods=['GET'])
-def initialize_learning_data():
+def check_server_ready():
     return make_response("", 204)
 
 
